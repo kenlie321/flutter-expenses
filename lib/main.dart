@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_expenses/widgets/chart.dart';
 import 'package:flutter_expenses/widgets/new_transaction.dart';
 import 'package:flutter_expenses/widgets/transaction_list.dart';
 import 'model/transaction.dart';
@@ -56,6 +57,14 @@ class _FlutterExpensesState extends State<FlutterExpenses> {
         amount: 3,
         trxDate: DateTime.now().add(new Duration(hours: 1)))
   ];
+
+  List<Transaction> get _recentTransaction{
+    return _listTrx.where((element) {
+      return element.trxDate.isAfter(DateTime.now()
+      .subtract(Duration(days:7)));
+    }).toList();
+  }
+
   final random = new Random();
 
   void _addNewTransaction(String titleParam, double amountParam) {
@@ -102,12 +111,7 @@ class _FlutterExpensesState extends State<FlutterExpenses> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Card(
-              child: Container(
-                width: double.infinity,
-                child: Text("Chart"),
-              ),
-            ),
+            Chart(_recentTransaction),
             TransactionList(_listTrx)
           ],
         ),
